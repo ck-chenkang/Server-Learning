@@ -1,0 +1,14 @@
+{
+  "name": "nodejs-express-docker-learning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "ck",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
