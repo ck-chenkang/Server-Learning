@@ -313,5 +313,46 @@ sudo docker run -p 80:80 -d --name vueApp vuenginxcontainer
 
 ![image-20210917172647301](Imag/image-20210917172647301.png)
 
-## 准备mysql容器
+## 准备Mysql容器
+
+[Docker搭建Mysql服务](https://www.cnblogs.com/sablier/p/11605606.html)
+
+```
+# 拉取镜像
+$ docker pull mysql:5.7
+
+# 查看镜像
+$ docker images
+
+# 一般来说数据库容器不需要建立目录映射
+$ sudo docker run -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=ck123456 -d mysql:5.7
+```
+
+- –name：容器名，此处命名为`mysql`
+- -e：配置信息，此处配置mysql的root用户的登陆密码
+- -p：端口映射，此处映射 主机3306端口 到 容器的3306端口
+- -d：后台运行容器，保证在退出终端后容器继续运行
+
+```
+如果要建立目录映射
+sudo docker run -p 3306:3306 --name mysql \
+-v /usr/local/docker/mysql/conf:/etc/mysql \
+-v /usr/local/docker/mysql/logs:/var/log/mysql \
+-v /usr/local/docker/mysql/data:/var/lib/mysql \
+-e MYSQL_ROOT_PASSWORD=123456 \
+-d mysql:5.7
+```
+
+```
+# 查看容器是否运行
+docker container ls
+```
+
+使用Navicat连接mysql
+
+<img src="Imag/image-20210917175828991.png" alt="image-20210917175828991" style="zoom: 67%;" />
+
+ 
+
+## 最后把三个容器组合成一个整体应用（不写了，也很简单）
 
