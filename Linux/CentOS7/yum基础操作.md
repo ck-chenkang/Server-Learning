@@ -1,5 +1,31 @@
 # yum基础
 
+## 更换为国内阿里源
+
+参考链接：
+
+[centos更换为国内阿里源](https://www.cnblogs.com/zzsdream/p/7405083.html)
+
+```
+# 备份
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+
+# 下载新的CentOS-Base.repo 到/etc/yum.repos.d/
+# 下面是centos7的，5和6的，查看上面的参考链接
+
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+
+或者
+
+curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+
+# 运行
+yum makecache fast 
+yum clean all
+```
+
+
+
 ## 增加yum源
 
 以Docker为例
@@ -23,3 +49,4 @@
 `yum clean all`
 
 yum 会把下载的软件包和header存储在cache中而不自动删除。如果觉得占用磁盘空间，可以使用yum clean指令清除缓存。
+
