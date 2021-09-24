@@ -12,6 +12,9 @@ git config  --global  http.sslVerify "false"
 ```
 在目录下cmd，打开终端
 
+git config --global  http.postBuffer 524288000
+git config  --global  http.sslVerify "false"
+
 git push origin main:main
 ```
 
