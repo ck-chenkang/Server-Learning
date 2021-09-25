@@ -1,4 +1,8 @@
-# 第一个k8s集群的安装
+# 第一次k8s集群的安装(失败了)
+
+参考链接
+
+[Kubernetes 安装篇（下）：基于 Kubeadm 方式的集群部署--有错误](https://xie.infoq.cn/article/592da7319e5f8a4e1351bd92d)
 
 ##  说明
 
@@ -363,7 +367,7 @@ EOF
 systemctl restart systemd-journald
 ```
 
-## 升级系统内核为4.44——<span style="color:red">错误指导，不要这样，看下面</span>
+## 升级系统内核为4.44——<span style="color:red">错误指导，不要这样，这里会把内核直接升级到最新，看下面</span>
 
 ps. <span style="color:red">搞完之后是5点多的版本了</span>
 
@@ -393,9 +397,11 @@ uname -r
 
 ![image-20210923213820219](Imag/image-20210923213820219.png)
 
-# <span style="color:red">centos安装指定内核版本</span>
+# <span style="color:red">centos安装指定内核版本</span>——之前升级到了5以上，这个方法回不去
 
 [centos安装内核到指定版本](https://www.cnblogs.com/cnwangshijun/p/7405153.html)
+
+[文章里还有一些其他的参考链接](https://blog.csdn.net/aduocd/article/details/113694954)
 
 1. 到[内核官网](https://www.cnblogs.com/cnwangshijun/p/7405153.html)下载对应的版本
 2. ![截图_20210523100529](C:/Users/ck/Desktop/截图_20210523100529.png)
@@ -420,6 +426,8 @@ tar -xvf linux-4.4.284.tar.xz -C /usr/src/
 # 10 
 cd /usr/src/linux-4.4.284
 
+cp /boot/config-3.10.0-514.el7.x86_64 .config
+
 # 11 
 sh -c 'yes "" | make oldconfig'
 
@@ -432,6 +440,16 @@ make -j4 bzImage
 ```
 # 13 
 make -j4 modules
+
+# 14
+make -j4 modules_install
+
+# 15
+awk -F\' '$1=="menuentry " {print $2}' /etc/grub2.cfg
+grub2-set-default 0 && init 6
+grub2-set-default 'CentOS Linux (0-rescue-f10008dbe6b44c1095827504c00e857d) 7 (Core)'
+# 
+uname -r
 ```
 
 
@@ -457,5 +475,106 @@ EOF
 
 chmod 755 /etc/sysconfig/modules/ipvs.modules && bash /etc/sysconfig/modules/ipvs.modules && 
 lsmod | grep -e ip_vs -e nf_conntrack_ipv4
+```
+
+![image-20210924211039543](Imag/image-20210924211039543.png)
+
+<span style="color:red">这里有个错误，我先不理他</span>
+
+## 安装Docker
+
+```
+yum install -y yum-utils device-mapper-persistent-data lvm
+
+# 2.设置下载Docker的镜像源
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+# 3.将软件包信息提前在本地缓存一份，用来提高搜索安装软件的速度
+yum makecache fast 
+
+# 这里要是执行 yum update -y 会出错，不知道为啥
+yum install -y docker-ce   
+
+# 创建 /etc/docker 目录
+mkdir /etc/docker
+
+# 配置 daemon.
+cat > /etc/docker/daemon.json <<EOF
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  }
+}
+EOF
+
+mkdir -p /etc/systemd/system/docker.service.d
+
+# 重启docker服务
+systemctl daemon-reload && systemctl restart docker && systemctl enable docker
+```
+
+## <span style="color:red">yum安装软件报错http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.rep 404 - Not Found</span>
+
+[yum安装软件报错http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.rep 404 - Not Found](https://blog.csdn.net/weixin_47882053/article/details/114022148)
+
+处理方法
+进入 /etc/yum.repos.d 目录下，将所有有关 <span style="color:red">docker</span> 的 repo 全部删掉
+
+```
+cd /etc/yum.repos.d/
+```
+
+```
+rm -rf docker-ce.repo mirrors.aliyun.com_docker-ce_linux_centos_docker-ce.rep.repo
+```
+
+## 安装 Kubeadm （主从配置） 
+
+```
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0
+gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg 
+http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
+ 
+yum -y  install  kubeadm-1.15.1 kubectl-1.15.1 kubelet-1.15.1
+systemctl enable kubelet.service	
+```
+
+## 初始化主节点
+
+```
+kubeadm config print init-defaults > kubeadm-config.yaml
+
+然后修改这个文件
+
+localAPIEndpoint:
+advertiseAddress: 192.168.66.10 # 1
+kubernetesVersion: v1.15.1 # 3
+networking:
+podSubnet: "10.244.0.0/16" # 2
+serviceSubnet: 10.96.0.0/12
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+featureGates:
+SupportIPVSProxyMode: true
+mode: ipvs
+ 
+kubeadm init --config=kubeadm-config.yaml --experimental-upload-certs | tee kubeadm-init.l
+```
+
+## 加入主节点以及其余工作节点 
+## 部署网络
+
+```
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
