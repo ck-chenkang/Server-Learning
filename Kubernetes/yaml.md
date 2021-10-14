@@ -1,4 +1,4 @@
-# k8s yaml
+# k8s yaml 资源清单
 
 ## yaml语法
 
