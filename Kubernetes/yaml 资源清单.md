@@ -25,6 +25,7 @@ YAML 全称是 ”YAML Ain’t a Markup Language” 的递归缩写，该语言�
 - 一般开头缩进两个空格，字符串口缩进一个空格，比如冒号，逗号等后面
 - 使用#表示注释
 - 使用---表示一个新的yaml文件的开始
+- 想要表示列表项，使用一个短横杠加一个空格
 
 还有一些其他的数据表示方法，可以参考上面的链接。
 
@@ -128,6 +129,63 @@ spec:         #必选，Pod中容器的详细定义
         - key: string
           path: string
 ```
+
+
+
+## 常用字段说明
+
+| 参数名                                      | 字段类型 | 说明                                                         |
+| ------------------------------------------- | -------- | ------------------------------------------------------------ |
+| version                                     | string   | k8s api的版本号，目前是v1，可以通过kubectl api-version查看   |
+| kind                                        | string   | 指定资源类型，例如Pod，Deployment，Service等                 |
+| metadata                                    | object   | 自定义metadata                                               |
+| metadata.name                               | string   | 对象名字，用户自定义                                         |
+| metadata.namespace                          | string   | 对象的命名空间，用户自定义                                   |
+| spec                                        | Object   | 对象的详细信息                                               |
+| spc.restartPolicy                           | string   | pod重启策略<br />Always：pod一旦退出就要进行重启<br />OnFailure：只有非正常退出才进行重启<br />Nerver：退出后不再拉起 |
+| spec.hostNetwork                            | bool     | 是否使用主机网络，默认值false设置为true，表示与主机在同一个网络空间 |
+| spec.nodeSelector                           | object   | 标签选择器，k-v形式                                          |
+| spec.containers[]                           | list     | 容器对象列表                                                 |
+| spec.containers[].name                      | string   | 容器的名称                                                   |
+| spec.containers[].image                     | string   | 容器使用的镜像                                               |
+| spec.containers[].imagePullPolicy           | string   | Always：每次都重新下载<br />IfNotPresent：如果本地存在则使用本地镜像，不重新拉取<br />Never：表示仅使用本地镜像 |
+| spec.containers[].command[]                 | list     | 指定容器启动命令，可以是多个命令，如果不指定则使用镜像中启动命令 |
+| spec.containers[].args[]                    | list     | 启动命令参数，可以多个                                       |
+| spec.containers[].workingDir                | string   | 容器的工作目录                                               |
+| spec.containers[].volumeMounts[]            | list     | 指定容器的挂在卷，可以多个                                   |
+| spec.containers[].volumeMounts[].name       | string   | 挂在卷名称                                                   |
+| spec.containers[].volumeMounts[].mountPath  | string   | 挂在卷路径                                                   |
+| spec.containers[].volumeMounts[].readOnly   | bool     | 读写模式，true只读（默认值），false读写                      |
+| spec.containers[].ports[]                   | list     | 容器用到端口                                                 |
+| spec.containers[].ports[].name              | string   | 端口名称                                                     |
+| spec.containers[].ports[].containerPort     | number   | 端口号                                                       |
+| spec.containers[].ports[].hostPort          | number   | 指定host主机使用端口。主要适用于端口映射，默认值是和容器内端口相同 |
+| spec.containers[].ports[].protocol          | string   | 监听协议，tcp、udp，默认是tcp                                |
+| spec.containers[].env[]                     | list     | 容器的环境变量列表                                           |
+| spec.containers[].env[].name                | string   | 环境变量name                                                 |
+| spec.containers[].env[].value               | string   | 环境变量value                                                |
+| spec.containers[].resources                 | object   | 用于设置资源限制和资源请求                                   |
+| spec.containers[].resources.limits          | object   | 设置资源上限                                                 |
+| spec.containers[].resources.limits.cpu      | string   | 对cpu的限制，k8s将一个逻辑cpu划分成1000个millicore(毫核)。例如 limits.cpu=500m相当于0.5个cpu。 limits.cpu=2表示占用2个cpu |
+| spec.containers[].resources.limits.memory   | string   | 对内存的限制                                                 |
+| spec.containers[].resources.requests        | object   | 容器启动和调度是的限制设置                                   |
+| spec.containers[].resources.requests.cpu    | string   | 对cpu的限制，k8s将一个逻辑cpu划分成1000个millicore(毫核)。例如 limits.cpu=500m相当于0.5个cpu。 limits.cpu=2表示占用2个cpu |
+| spec.containers[].resources.requests.memory | string   | 对内存的限制                                                 |
+
+## kind种类
+
+| 分类                        | 说明                                              | 其他                                                         |
+| --------------------------- | ------------------------------------------------- | ------------------------------------------------------------ |
+| Pod                         | k8s最基本管理单元                                 |                                                              |
+| ReplicationController（RC） | 副本控制器，用于控制Pod副本数，目前官方不建议使用 | 保证副本数，始终为用户指定数目                               |
+| ReplicaSet（RS）            | 是RC的升级版本，比RC多了一个选择器，其他都一样。  | 保证副本数，始终为用户指定数目，不能动态扩缩容               |
+| Deployment                  | 支持动态扩缩容，滚动升级，版本回滚，RS不支持      |                                                              |
+| DeamonSet                   | 确保全部或部分Node 上运行一个 Pod 的副本          | 例如：要求每个node上都有监控系统，日志系统等                 |
+| Job                         | 执行脚本，linux命令等                             | 适用于批处理任务                                             |
+| CronJob                     | 定时执行脚本，linux命令等                         | 定时批处理任务                                               |
+| Service                     | 提供负载均衡和服务自动发现，底层通过EndPoint实现  |                                                              |
+| EndPoints                   | pod名字和ip映射关系集合，支撑Service              |                                                              |
+| ConfigMap                   | 配置集合，用于给pod/容器传递参数                  | 1、 将环境变量直接定义在configMap中，当Pod启动时,通过env来引用configMap中定义的环境变量。 <br />2、 将一个完整配置文件封装到configMap中,然后通过共享卷的方式挂载到Pod中,实现给应用传参。 |
 
 
 
