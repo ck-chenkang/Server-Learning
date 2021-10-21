@@ -7,7 +7,9 @@ git config --global  http.postBuffer 524288000
 git config  --global  http.sslVerify "false"
 ```
 
-# vscode推送失败
+# vscode推送、拉取失败
+
+方法一：
 
 ```
 在目录下cmd，打开终端
@@ -18,3 +20,12 @@ git config  --global  http.sslVerify "false"
 git push origin main:main
 ```
 
+方法二：
+```
+在vscode终端下：
+git config --global  http.postBuffer 524288000
+git config  --global  http.sslVerify "false"
+
+重启一下vscode，然后再推送
+
+```

@@ -1,0 +1,216 @@
+日期：
+    NOW()	返回当前的日期和时间
+    CURDATE()	返回当前的日期
+    CURTIME()	返回当前的时间
+    DATE()	提取日期或日期/时间表达式的日期部分
+    EXTRACT()	返回日期/时间按的单独部分
+    DATE_ADD()	给日期添加指定的时间间隔
+    DATE_SUB()	从日期减去指定的时间间隔
+    DATEDIFF()	返回两个日期之间的天数
+    DATE_FORMAT()	用不同的格式显示日期/时间
+
+    1）SELECT NOW()
+        NOW()
+        2021-08-04 10:35:16
+
+    2）SELECT CURDATE()
+        CURDATE()
+        2021-08-04
+    
+    3）SELECT CURTIME()
+        CURTIME()
+        10:38:06
+
+    4）DATE(date)   提取日期部分
+
+        表：
+        OrderId	    ProductName	        OrderDate
+        1	        'Computer'	    2008-12-29 16:25:46.635
+
+        SELECT ProductName, DATE(OrderDate) AS OrderDate
+        FROM Orders
+        WHERE OrderId=1
+
+        结果：
+        ProductName	    OrderDate
+        'Computer'	    2008-12-29
+    
+    5）EXTRACT()    返回日期/时间按的单独部分，比如，年、月、日、小时、分钟等等
+
+        语法：
+            EXTRACT(unit FROM date)
+        参数说明：
+            date是合法的日期
+
+            unit值
+            MICROSECOND
+            SECOND
+            MINUTE
+            HOUR
+            DAY
+            WEEK
+            MONTH
+            QUARTER
+            YEAR
+            SECOND_MICROSECOND
+            MINUTE_MICROSECOND
+            MINUTE_SECOND
+            HOUR_MICROSECOND
+            HOUR_SECOND
+            HOUR_MINUTE
+            DAY_MICROSECOND
+            DAY_SECOND
+            DAY_MINUTE
+            DAY_HOUR
+            YEAR_MONTH
+
+            表：
+            OrderId	ProductName	OrderDate
+            1	Computer	2021-08-04 10:50:48
+
+            查询1：
+
+                SELECT
+                EXTRACT( YEAR FROM OrderDate ) AS OrderYear,
+                EXTRACT( MONTH FROM OrderDate ) AS OrderMonth,
+                EXTRACT( DAY FROM OrderDate ) AS OrderDay 
+                FROM
+                    `order`
+                WHERE
+                    OrderId =1
+
+                结果： 
+                OrderYear	OrderMonth	OrderDay
+                2021	     8	        4
+
+            查询2：
+                SELECT
+                    EXTRACT( HOUR FROM OrderDate ) AS hour,
+                    EXTRACT( MINUTE FROM OrderDate ) AS minute,
+                    EXTRACT( SECOND FROM OrderDate ) AS second 
+                FROM
+                    `order`
+                WHERE
+                    OrderId =1
+
+            结果：
+                hour	minute	second
+                10	    50	    48
+
+    6）DATE_ADD() 时间的加函数
+        DATE_ADD(date,INTERVAL expr type)
+
+        type类型，参考5）中的类型
+
+        表：
+        OrderId	ProductName	OrderDate
+        1	Computer	2021-08-04 10:50:48
+
+        实例：
+        SELECT
+                DATE_ADD(orderdate, INTERVAL 2 DAY) as day
+            FROM
+                `order`
+            WHERE
+                OrderId =1
+
+        结果：
+            day
+            2021-08-06 10:50:48
+
+    7）DATE_SUB()   时间的减函数
+        参考    DATE_ADD()
+
+    8）DATEDIFF() 函数返回两个日期之间的天数。
+        
+        SELECT DATEDIFF('2008-12-30','2008-12-29') AS DiffDate
+
+        结果：
+            DiffDate
+            1
+
+    9）DATE_FORMAT()    用于以不同的格式显示日期/时间数据。
+
+        语法：
+            DATE_FORMAT(date,format)
+        格式：
+            格式	描述
+            %a	缩写星期名
+            %b	缩写月名
+            %c	月，数值
+            %D	带有英文前缀的月中的天
+            %d	月的天，数值(00-31)
+            %e	月的天，数值(0-31)
+            %f	微秒
+            %H	小时 (00-23)
+            %h	小时 (01-12)
+            %I	小时 (01-12)
+            %i	分钟，数值(00-59)
+            %j	年的天 (001-366)
+            %k	小时 (0-23)
+            %l	小时 (1-12)
+            %M	月名
+            %m	月，数值(00-12)
+            %p	AM 或 PM
+            %r	时间，12-小时（hh:mm:ss AM 或 PM）
+            %S	秒(00-59)
+            %s	秒(00-59)
+            %T	时间, 24-小时 (hh:mm:ss)
+            %U	周 (00-53) 星期日是一周的第一天
+            %u	周 (00-53) 星期一是一周的第一天
+            %V	周 (01-53) 星期日是一周的第一天，与 %X 使用
+            %v	周 (01-53) 星期一是一周的第一天，与 %x 使用
+            %W	星期名
+            %w	周的天 （0=星期日, 6=星期六）
+            %X	年，其中的星期日是周的第一天，4 位，与 %V 使用
+            %x	年，其中的星期一是周的第一天，4 位，与 %v 使用
+            %Y	年，4 位
+            %y	年，2 位
+        例子：
+            DATE_FORMAT(NOW(),'%b %d %Y %h:%i %p')
+            DATE_FORMAT(NOW(),'%m-%d-%Y')
+            DATE_FORMAT(NOW(),'%d %b %y')
+            DATE_FORMAT(NOW(),'%d %b %Y %T:%f')
+        结果：
+            Dec 29 2008 11:45 PM
+            12-29-2008
+            29 Dec 08
+            29 Dec 2008 16:25:46.635
+
+NUll:
+    1) COALESCE 
+        替换列中的null为给定值
+
+        select coalesce(a,b,c);
+        如果a==null,则选择b；如果b==null,则选择c；如果a!=null,则选择a；如果a b c 都为null ，则返回为null（没意义）。
+
+        表：
+        Id	Name	Gender	Age	CreateTime
+        1	陈康	1	27	2021-08-02 14:23:58
+        2	JACK	1	40	2021-08-02 16:16:19
+        3				2021-08-02 18:08:21
+
+        语句：
+        SELECT COALESCE(Name,"替换为我") FROM `Person`
+        
+        结果：
+        COALESCE(Name,"替换为我")
+        陈康
+        JACK
+        替换为我
+
+    2) IFNULL
+        表：
+            P_Id	ProductName	UnitPrice	UnitsInStock	UnitsOnOrder
+            1	    computer	    699     	25	            15              
+            2	    printer	        365         36        	        
+            3	    telephone	    280     	159	            57       
+
+            SELECT ProductName,UnitPrice*(UnitsInStock+IFNULL(UnitsOnOrder,0))
+            FROM Products
+        同：
+            SELECT ProductName,UnitPrice*(UnitsInStock+COALESCE(UnitsOnOrder,0))
+            FROM Products
+
+            
+

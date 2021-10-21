@@ -1,0 +1,681 @@
+一、创建、删除、使用数据库：
+    创建：CREATE DATABASE 数据库名字
+    删除：DROP DATABASE 数据库名字
+    使用：USE 数据库名字
+
+二、创建表：
+    注意使用引号，有的时候不用会报错
+
+    CREATE TABLE IF NOT EXISTS `tbl`(
+   `id` INT UNSIGNED AUTO_INCREMENT,
+   `title` VARCHAR(100) NOT NULL,
+   `author` VARCHAR(40) NOT NULL,
+   `date` DATE,
+   PRIMARY KEY ( `id` )
+    )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+    这一句也可以不用ENGINE=InnoDB DEFAULT CHARSET=utf8
+    ``可以用，也可以不用    
+
+
+    CREATE TABLE t_order ( 
+      id INT(11) NOT NULL AUTO_INCREMENT COMMENT '主键,自增id', 
+      order_id VARCHAR(25) NOT NULL COMMENT '订单号,唯一',  
+      pay_status TINYINT(2) UNSIGNED DEFAULT 0 COMMENT '1：未支付,2：支付成功,3：支付失败, 4：已下单,5：申请退款,6：退款成功,7：退款失败 ', 
+      user_id INT(11) NOT NULL COMMENT '用户id', 
+      total_price DECIMAL(25,2) NOT NULL DEFAULT 0.00 COMMENT '交易金额',  
+      result TEXT COMMENT '结果',  
+      order_desc VARCHAR(128) NOT NULL DEFAULT '' COMMENT '订单描述',   
+      is_overtime TINYINT(1) DEFAULT 0 COMMENT '是否超时,0表示否,1表示是',   
+      create_date DATE DEFAULT NULL COMMENT '购买日期',  
+      create_time TIMESTAMP COMMENT '创建时间',  
+      update_time TIMESTAMP COMMENT '更新时间',   
+      PRIMARY KEY (id),      
+      UNIQUE KEY uk_order_id (order_id),  
+      INDEX idx_order (order_id,pay_status,user_id)  
+    ) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+
+    Mysql表名用t_开头，索引用idx_开头，唯一索引用uk_开头。    
+    UNSIGNED：代表取 0 以上
+
+    约束：
+    1、NOT NULL：代表不能为NULL，要是为NULL会报错
+
+    2、UNIQUE 
+        作用为：唯一约束保证在一个字段或者一组字段里的数据与表中其它行的数据相比是唯一的。
+        UNIQUE 和 PRIMARY KEY 约束均为列或列集合提供了唯一性的保证。
+        PRIMARY KEY 拥有自动定义的 UNIQUE 约束。
+        请注意，每个表可以有多个 UNIQUE 约束，但是每个表只能有一个 PRIMARY KEY 约束。CREATE TABLE Persons
+            CREATE TABLE Persons
+            (
+            Id_P int NOT NULL,
+            LastName varchar(255) NOT NULL,
+            FirstName varchar(255),
+            Address varchar(255),
+            City varchar(255),
+            UNIQUE (Id_P)
+            )
+        撤销：
+            ALTER TABLE Persons
+            DROP INDEX uc_PersonID
+    3、PRIMARY KEY：定义主键
+        PRIMARY KEY 约束唯一标识数据库表中的每条记录。
+        主键必须包含唯一的值。
+        主键列不能包含 NULL 值。
+        每个表都应该有一个主键，并且每个表只能有一个主键。
+            CREATE TABLE Persons
+            (
+            Id_P int NOT NULL,
+            LastName varchar(255) NOT NULL,
+            FirstName varchar(255),
+            Address varchar(255),
+            City varchar(255),
+            PRIMARY KEY (Id_P)
+            )
+        撤销：
+            ALTER TABLE Persons
+            DROP PRIMARY KEY
+    4、FOREIGN KEY
+        保证数据的参照完整性。
+        外键   ( foreign key )   是用于建立和加强两个表数据之间的链接的一列或多列。
+        通过将保存表中主键值的一列或多列添加到另一个表中，可创建两个表之间的链接。这个列就成为第二个表的外键。 
+
+        CREATE TABLE Orders
+        (
+        Id_O int NOT NULL,
+        OrderNo int NOT NULL,
+        Id_P int,
+        PRIMARY KEY (Id_O),
+        FOREIGN KEY (Id_P) REFERENCES Persons(Id_P)
+        )
+
+       不用会怎样？
+
+        不用也不会怎么样，如果一个健壮的系统，数据库中的数据一定有很好的参照完整性，如果不用外键，就要多写代码对数据的完整性进行额外的判断 。
+
+        外键的作用很重要,最好在数据库中使用。
+
+        下面举一个栗子就会明白。
+
+                比如有两张表格，一个是学生档案，另一个是上学期间的成绩单
+
+                档案中会有：学号，姓名。(学号为主键)   
+                成绩单有（这里尽量简化）：学期号，学号,平均分数（学期号，学号两个同时为主键，学号同时为外键）   
+                为了保证成绩单上的数据有效，所以要求录入学号时，必需保证档案中有这个学号，否则就不能录入。 从而保证了成绩单上的成绩数据的引用完整，否则将会是垃圾数据。   
+
+            如果用程序控制，有很多缺点；录入成绩单时为了保证学号有效，首先要搜索档案，当档案很大时会影响效率。程序控制并不能保证百分之百引用完整性，尤其是并发操作。
+
+            说一个特例（主要是说明程序控制不好）： 此例的操作流程正确与否不重要，但说明了程序控制并不是好方法。  
+                比如： A录入成绩单，B在编辑档案。   
+            当A录入张三的成绩，保存时，搜索张三存在，于是程序下一步就要存盘，但这时B恰好把张三删除了。但A那边的程序并不知道，于是就把一条垃圾数据存进数据库中了。
+
+    5、CHECK
+        CHECK 约束用于限制列中的值的范围。
+
+        如果对单个列定义 CHECK 约束，那么该列只允许特定的值。
+
+        如果对一个表定义 CHECK 约束，那么此约束会在特定的列中对值进行限制。
+
+        CREATE TABLE Persons
+        (
+        Id_P int NOT NULL,
+        LastName varchar(255) NOT NULL,
+        FirstName varchar(255),
+        Address varchar(255),
+        City varchar(255),
+        CHECK (Id_P>0)
+        )
+        
+        如果需要命名 CHECK 约束，以及为多个列定义 CHECK 约束，请使用下面的 SQL 语法：
+
+        CREATE TABLE Persons
+        (
+        Id_P int NOT NULL,
+        LastName varchar(255) NOT NULL,
+        FirstName varchar(255),
+        Address varchar(255),
+        City varchar(255),
+        CONSTRAINT chk_Person CHECK (Id_P>0 AND City='Sandnes')
+        )
+
+        如果在表已存在的情况下为 "Id_P" 列创建 CHECK 约束，请使用下面的 SQL：
+        ALTER TABLE Persons
+        ADD CHECK (Id_P>0)
+
+        如果需要命名 CHECK 约束，以及为多个列定义 CHECK 约束，请使用下面的 SQL 语法：
+        ALTER TABLE Persons
+        ADD CONSTRAINT chk_Person CHECK (Id_P>0 AND City='Sandnes')
+
+        撤销 CHECK 约束
+        ALTER TABLE Persons
+        DROP CHECK chk_Person
+    6、DEFAULT
+        DEFAULT 约束用于向列中插入默认值。
+        如果没有规定其他的值，那么会将默认值添加到所有的新记录。
+    7、AUTO_INCREMEN：定义为自增属性，数值会自动加1
+        我们通常希望在每次插入新记录时，自动地创建主键字段的值。
+        CREATE TABLE Persons
+        (
+        P_Id int NOT NULL AUTO_INCREMENT,
+        LastName varchar(255) NOT NULL,
+        FirstName varchar(255),
+        Address varchar(255),
+        City varchar(255),
+        PRIMARY KEY (P_Id)
+        )
+    8、COMMENT为字段描述
+
+    
+    其他：
+    ENGINE：设置储存引擎
+    CHARSET：设置编码
+
+    关于数据类型：
+        INT类型的数值，建议不要从0开始，0会被mybatis识别成空。
+        VARCHAR要检查字段长度，写入时是否限制长度，太长会浪费存储空间，太短插入时会报错。
+        VARCHAR的DEFAULT默认值，最好设置成空''，而不是NULL。NULL对统计、求和都会有影响。
+        存储精确浮点数，必须使用DECIMAL替代FLOAT和DOUBLE。
+        布尔类型，或者一些简单的类型数值。可以使用TINYINT(1)，0表示否，1表示是。TINYINT 的范围是0-255之间的数字。
+        TEXT类型，不可以有默认值。否则会报错 BLOB, TEXT, GEOMETRY or JSON column  can't have a default value
+        涉及新增或变更操作记录的，必须有 create_time字段和update_time字段 ，方便定位问题。 
+        日期时间类型，用 DATETIME 或者TIMESTAMP ，datetime和timestamp区别如下：
+        datetime只支持一个时区，就是存储时当前服务器的时区，而timestamp存储的是与时区有关;
+        datetime存储占用8个字节，而timestamp是占用4字节；
+        timestamp插入NULL时会自动转换成当前时间.datetime插入NULL就是NULL.
+
+三、查看建表语句：
+    SHOW CREATE TABLE 表名
+
+四、删除表：
+    DROP TABLE 表名
+
+五、INSERT：
+
+    INSERT INTO 表名 (fild1, fild2, ...fildN) VALUES (value1, value2, ...valueN);
+
+    DROP TABLE IF EXISTS `employee_tbl`;
+    CREATE TABLE `employee_tbl` (
+    `id` int(11) NOT NULL,
+    `name` char(10) NOT NULL DEFAULT '',
+    `date` datetime NOT NULL,
+    `singin` tinyint(4) NOT NULL DEFAULT '0' COMMENT '登录次数',
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+    INSERT INTO `employee_tbl` VALUES ('1', '小明', '2016-04-22 15:25:33', '1'), 
+    ('2', '小王', '2016-04-20 15:25:47', '3'), 
+    ('3', '小丽', '2016-04-19 15:26:02', '2'), 
+    ('4', '小王', '2016-04-07 15:26:14', '4'),
+     ('5', '小明', '2016-04-11 15:26:40', '4'), 
+     ('6', '小明', '2016-04-04 15:26:54', '2');
+
+    字符串需要用''或者"", 包裹起来
+
+六、SELECT： 
+    LIMIT等价于Sql Server中的SELECT TOP
+    OFFSET
+
+    SELECT column_name,column_name
+    FROM table1_name, table2_name
+    [WHERE Clause]
+    [LIMIT N][ OFFSET M]
+
+    查询语句中你可以使用一个或者多个表，表之间使用逗号(,)分割，并使用WHERE语句来设定查询条件。
+    SELECT 命令可以读取一条或者多条记录。
+    你可以使用星号（*）来代替其他字段，SELECT语句会返回表的所有字段数据
+    你可以使用 WHERE 语句来包含任何条件。
+    你可以使用 LIMIT 属性来设定返回的记录数。// sql server没有这个关键字
+    你可以通过OFFSET指定SELECT语句开始查询的数据偏移量。默认情况下偏移量为0，从第几行开始返回数据。
+
+七、DISTINCT
+    SELECT DISTINCT fild1, fild2, fild3 FROM 表名称;
+    
+    Id  Name   gender  CreateTime
+    1	陈康	1	27	2021-08-02 14:23:58
+    2	JACK	1	40	2021-08-02 16:16:19
+    3	MA	1	50	2021-08-02 16:16:36
+
+    示例1：select DISTINCT  gender from Person
+    结果：
+    1
+
+    示例2：SELECT DISTINCT	id, NAME, gender  FROM  Person
+    结果：
+    1	陈康	1
+    2	JACK	1
+    3	MA	1
+
+八、WHERE
+    AND
+    OR
+
+    SELECT field1, field2,...fieldN FROM table_name1, table_name2...
+    [WHERE condition1 [AND [OR]] condition2.....
+
+    查询语句中你可以使用一个或者多个表，表之间使用逗号, 分割，并使用WHERE语句来设定查询条件。
+    你可以在 WHERE 子句中指定任何条件。
+    你可以使用 AND 或者 OR 指定一个或多个条件。
+    WHERE 子句也可以运用于 SQL 的 DELETE 或者 UPDATE 命令。
+    WHERE 子句类似于程序语言中的 if 条件，根据 MySQL 表中的字段值来读取指定的数据。
+
+    操作符  描述    实例
+    =	等号，检测两个值是否相等，如果相等返回true	(A = B) 返回false。
+    <>, !=	不等于，检测两个值是否相等，如果不相等返回true	(A != B) 返回 true。
+    >	大于号，检测左边的值是否大于右边的值, 如果左边的值大于右边的值返回true	(A > B) 返回false。
+    <	小于号，检测左边的值是否小于右边的值, 如果左边的值小于右边的值返回true	(A < B) 返回 true。
+    >=	大于等于号，检测左边的值是否大于或等于右边的值, 如果左边的值大于或等于右边的值返回true	(A >= B) 返回false。
+    <=	小于等于号，检测左边的值是否小于或等于右边的值, 如果左边的值小于或等于右边的值返回true	(A <= B) 返回 true。
+
+    使用主键来作为 WHERE 子句的条件查询是非常快速的。
+
+九、UPDATE
+
+    UPDATE table_name SET field1=new-value1, field2=new-value2
+    [WHERE Clause]
+
+    你可以同时更新一个或多个字段。
+    你可以在 WHERE 子句中指定任何条件。
+    你可以在一个单独表中同时更新数据。
+
+十、DELETE 删除行
+
+    DELETE FROM table_name [WHERE Clause]
+
+    如果没有指定 WHERE 子句，MySQL 表中的所有记录将被删除。
+    你可以在 WHERE 子句中指定任何条件
+    你可以在单个表中一次性删除记录。
+
+十一、LIKE
+    和通配符一起用
+
+    WHERE使用的时候，是fild1 = ''；有的时候，需要使用到通配符，这个时候，就要用到LIKE，代替 '='，示例如下：
+
+    SELECT field1, field2,...fieldN 
+    FROM table_name
+    WHERE field1 LIKE 'some%' [AND [OR]] filed2 = 'somevalue'
+
+    你可以在 WHERE 子句中指定任何条件。
+    你可以在 WHERE 子句中使用LIKE子句。
+    你可以使用LIKE子句代替等号 =。
+    LIKE 通常与 % 一同使用，类似于一个元字符的搜索。
+    你可以使用 AND 或者 OR 指定一个或多个条件。
+    你可以在 DELETE 或 UPDATE 命令中使用 WHERE...LIKE 子句来指定条件。
+
+    sql中可以使用以下通配符：
+    1、%	代表零个或多个字符
+    2、_	仅替代一个字符
+    3、[charlist]	字符列中的任何单一字符
+    4、[^charlist]
+        或者            不在字符列中的任何单一字符
+        [!charlist]
+
+    例子1：使用%;
+        SELECT * FROM Persons
+        WHERE City LIKE 'Ne%'
+    例子2：使用_;
+        SELECT * FROM Persons
+        WHERE FirstName LIKE '_eorge'
+    例子3：使用[charlist];
+        PERSON表：
+        Id	LastName	FirstName	Address	City
+        1	Adams	John	Oxford Street	London
+        2	Bush	George	Fifth Avenue	New York
+        3	Carter	Thomas	Changan Street	Beijing
+
+        SELECT * FROM Persons
+        WHERE City LIKE '[ALN]%'
+
+        Id	LastName	FirstName	Address	City
+        1	Adams	John	Oxford Street	London
+        2	Bush	George	Fifth Avenue	New York
+
+十二、REGEXP
+    正则匹配
+
+    语法：把LIKE换成REGEXP
+
+    ^	匹配输入字符串的开始位置。如果设置了 RegExp 对象的 Multiline 属性，^ 也匹配 '\n' 或 '\r' 之后的位置。
+    $	匹配输入字符串的结束位置。如果设置了RegExp 对象的 Multiline 属性，$ 也匹配 '\n' 或 '\r' 之前的位置。
+    .	匹配除 "\n" 之外的任何单个字符。要匹配包括 '\n' 在内的任何字符，请使用像 '[.\n]' 的模式。
+    [...]	字符集合。匹配所包含的任意一个字符。例如， '[abc]' 可以匹配 "plain" 中的 'a'。
+    [^...]	负值字符集合。匹配未包含的任意字符。例如， '[^abc]' 可以匹配 "plain" 中的'p'。
+    p1|p2|p3	匹配 p1 或 p2 或 p3。例如，'z|food' 能匹配 "z" 或 "food"。'(z|f)ood' 则匹配 "zood" 或 "food"。
+    *	匹配前面的子表达式零次或多次。例如，zo* 能匹配 "z" 以及 "zoo"。* 等价于{0,}。
+    +	匹配前面的子表达式一次或多次。例如，'zo+' 能匹配 "zo" 以及 "zoo"，但不能匹配 "z"。+ 等价于 {1,}。
+    {n}	n 是一个非负整数。匹配确定的 n 次。例如，'o{2}' 不能匹配 "Bob" 中的 'o'，但是能匹配 "food" 中的两个 o。
+    {n,m}	m 和 n 均为非负整数，其中n <= m。最少匹配 n 次且最多匹配 m 次。
+
+    示例：
+        查找name字段中以'st'为开头的所有数据：
+        mysql> SELECT name FROM person_tbl WHERE name REGEXP '^st';
+
+        查找name字段中以'ok'为结尾的所有数据：
+        mysql> SELECT name FROM person_tbl WHERE name REGEXP 'ok$';
+
+        查找name字段中包含'mar'字符串的所有数据：
+        mysql> SELECT name FROM person_tbl WHERE name REGEXP 'mar';
+
+        查找name字段中以元音字符开头或以'ok'字符串结尾的所有数据：
+        mysql> SELECT name FROM person_tbl WHERE name REGEXP '^[aeiou]|ok$';
+
+十三、UNION 和 UNION ALL
+    UNION 语句：用于将不同表中相同列中查询的数据展示出来；（不包括重复数据）
+    UNION ALL 语句：用于将不同表中相同列中查询的数据展示出来；（包括重复数据）
+
+    SELECT expression1, expression2, ... expression_n
+    FROM tables
+    [WHERE conditions]
+    UNION [ALL | DISTINCT]
+    SELECT expression1, expression2, ... expression_n
+    FROM tables
+    [WHERE conditions];
+
+    expression1, expression2, ... expression_n: 要检索的列。
+
+    tables: 要检索的数据表。
+
+    WHERE conditions: 可选， 检索条件。
+
+    DISTINCT: 可选，删除结果集中重复的数据。默认情况下 UNION 操作符已经删除了重复数据，所以 DISTINCT 修饰符对结果没啥影响。
+
+    ALL: 可选，返回所有结果集，包含重复数据。
+
+十四、ORDER BY 
+
+    ASC 升序 默认
+    DESC 降序
+
+    SELECT field1, field2,...fieldN FROM table_name1, table_name2...
+    ORDER BY field1 [ASC [DESC][默认 ASC]], [field2...] [ASC [DESC][默认 ASC]]
+
+    你可以使用任何字段来作为排序的条件，从而返回排序后的查询结果。
+    你可以设定多个字段来排序。
+    你可以使用 ASC 或 DESC 关键字来设置查询结果是按升序或降序排列。 默认情况下，它是按升序排列。
+    你可以添加 WHERE...LIKE 子句来设置条件。
+
+十五、GROUP BY
+
+    GROUP BY 语句根据一个或多个列对结果集进行分组。
+
+    在分组的列上我们可以使用 COUNT, SUM, AVG,等函数。
+
+    SELECT column_name, function(column_name)
+    FROM table_name
+    WHERE column_name operator value
+    GROUP BY column_name;
+
+    表：
+    id	name	date	singin
+    1	小明	2016-04-22 15:25:33	1
+    2	小王	2016-04-20 15:25:47	3
+    3	小丽	2016-04-19 15:26:02	2
+    4	小王	2016-04-07 15:26:14	4
+    5	小明	2016-04-11 15:26:40	4
+    6	小明	2016-04-04 15:26:54	2
+
+    语句：
+    SELECT name, COUNT(*) FROM   employee_tbl GROUP BY name;
+
+    结果：
+    name	COUNT(*)
+    小丽	1
+    小明	3
+    小王	2
+
+十六、WITH ROLLUP
+    WITH ROLLUP 可以实现在分组统计数据基础上再进行相同的统计（SUM,AVG,COUNT…）。
+
+    SELECT name, SUM(singin) as singin_count FROM  employee_tbl GROUP BY name;
+
+    name	singin_count
+    小丽	2
+    小明	7
+    小王	7
+
+    SELECT name, SUM(singin) as singin_count FROM  employee_tbl GROUP BY name WITH ROLLUP;
+
+    name	singin_count
+    小丽	2
+    小明	7
+    小王	7
+            16
+
+    其中记录 NULL 表示所有人的登录次数。
+
+    我们可以使用 coalesce 来设置一个可以取代 NUll 的名称，coalesce 语法：
+    select coalesce(a,b,c);  参数说明：如果a==null,则选择b；如果b==null,则选择c；如果a!=null,则选择a；如果a b c 都为null ，则返回为null（没意义）。
+
+    SELECT coalesce(name, '总数'), SUM(singin) as singin_count FROM  employee_tbl GROUP BY name WITH ROLLUP;
+    coalesce(name, '总数')	singin_count
+    小丽	2
+    小明	7
+    小王	7
+    总数	16
+
+十七、IN
+    配合WHERE使用
+
+    IN 操作符允许我们在 WHERE 子句中规定多个值。
+
+    SELECT column_name(s)
+    FROM table_name
+    WHERE column_name IN (value1,value2,...)
+
+    表：
+    Id	LastName	FirstName	Address	City
+    1	Adams	John	Oxford Street	London
+    2	Bush	George	Fifth Avenue	New York
+    3	Carter	Thomas	Changan Street	Beijing
+
+    实例：
+    SELECT * FROM Persons
+    WHERE LastName IN ('Adams','Carter')
+
+    结果：
+    Id	LastName	FirstName	Address	City
+    1	Adams	John	Oxford Street	London
+    3	Carter	Thomas	Changan Street	Beijing
+
+十八、BETWEEN
+    NOT BETWEEN
+    配合WHERE使用
+
+    操作符 BETWEEN ... AND 会选取介于两个值之间的数据范围。这些值可以是数值、文本或者日期。
+
+    SELECT column_name(s)
+    FROM table_name
+    WHERE column_name
+    BETWEEN value1 AND value2
+
+    Id	LastName	FirstName	Address	City
+    1	Adams	John	Oxford Street	London
+    2	Bush	George	Fifth Avenue	New York
+    3	Carter	Thomas	Changan Street	Beijing
+    4	Gates	Bill	Xuanwumen 10	Beijing
+
+    SELECT * FROM Persons
+    WHERE LastName
+    BETWEEN 'Adams' AND 'Carter'
+
+    Id	LastName	FirstName	Address	City
+    1	Adams	John	Oxford Street	London
+    2	Bush	George	Fifth Avenue	New York
+
+    重要事项：不同的数据库对 BETWEEN...AND 操作符的处理方式是有差异的。
+    某些数据库会列出介于 "Adams" 和 "Carter" 之间的人，但不包括 "Adams" 和 "Carter" ；
+    某些数据库会列出介于 "Adams" 和 "Carter" 之间并包括 "Adams" 和 "Carter" 的人；
+    而另一些数据库会列出介于 "Adams" 和 "Carter" 之间的人，包括 "Adams" ，但不包括 "Carter" 。
+
+    所以，请检查你的数据库是如何处理 BETWEEN....AND 操作符的！
+
+    SELECT * FROM Persons
+    WHERE LastName
+    NOT BETWEEN 'Adams' AND 'Carter'
+
+    Id	LastName	FirstName	Address	City
+    3	Carter	Thomas	Changan Street	Beijing
+    4	Gates	Bill	Xuanwumen 10	Beijing
+
+十九、别名：表的别名、列的别名
+    AS可以省略
+
+    表的别名：
+    SELECT column_name(s)
+    FROM table_name
+    AS alias_name
+
+    列的别名：
+    SELECT column_name AS alias_name
+    FROM table_name
+
+二十、不同的JOIN
+    JOIN  or  INNER JOIN（内连接） ： 这两个是相同的，要求两边表同时有对应的数据，返回行，任何一边缺失数据就不显示。
+        理解：对于表A,B；如果A中有1行和B中N行数据连接条件成立，那么返回，N行数据，不成立则不返回
+
+    LEFT JOIN（左外连接）：即使右边的表中没有匹配，也从左表返回所有的行。
+        理解：对于表A,B；如果A中有1行和B中N行数据连接条件成立，那么返回，N行数据，如果不成立，则只返回左边的1行数据
+
+    RIGHT JOIN（右外连接）：即使左边的表中没有匹配，也从右表返回所有的行。
+        理解：对于表A,B；如果A中有1行和B中N行数据连接条件成立，那么返回，N行数据，如果不成立，则只返回右边的1行数据
+
+    FULL JOIN（全外连接）：只要其中一个表中存在匹配就返回行。
+        MySql不支持
+
+
+    grade表：
+        sn	score	id
+        1	90	    1
+        1	80	    2
+        3	90	    1
+        2	100	    4
+        2	100	    4
+
+    student表：
+        id	name
+        1	关羽
+        2	张飞
+        3	刘备
+
+    SELECT s.name,g.sn,g.score from student as s join grade as g on s.id = g.id
+
+    name	sn	score
+    关羽	 1	  90
+    张飞	 1	  80
+    关羽	 3	  90    
+
+    SELECT s.name,g.sn,g.score from student as s left join grade as g on s.id = g.id
+
+    name	sn	score
+    关羽	1	90
+    张飞	1	80
+    关羽	3	90
+    刘备		
+
+    SELECT s.name,g.sn,g.score from student as s right join grade as g on s.id = g.id
+
+    name	sn	score
+    关羽	1	90
+    关羽	3	90
+    张飞	1	80
+            2	100
+
+    SELECT s.name,g.sn,g.score from student as s full join grade as g on s.id = g.id
+    结果：错误，MySql不支持full join
+
+二十一、SELECT INTO
+    SQL SELECT INTO 语句可用于创建表的备份复件。
+
+    SELECT INTO 语句从一个表中选取数据，然后把数据插入另一个表中。
+
+    SELECT INTO 语句常用于创建表的备份复件或者用于对记录进行存档。
+
+二十二、CREATE INDEX
+    在不读取整个表的情况下，索引使数据库应用程序可以更快地查找数据。
+
+    您可以在表中创建索引，以便更加快速高效地查询数据。
+
+    用户无法看到索引，它们只能被用来加速搜索/查询。
+
+    注释：更新一个包含索引的表需要比更新一个没有索引的表更多的时间，这是由于索引本身也需要更新。因此，理想的做法是仅仅在常常被搜索的列（以及表）上面创建索引。
+
+    CREATE INDEX index_name
+    ON table_name (column_name)
+
+    注释："column_name" 规定需要索引的列。
+
+    唯一的索引：
+    在表上创建一个唯一的索引。唯一的索引意味着两个行不能拥有相同的索引值。
+    理解：比如，索引是1,2,3,4，这样就是不重复的，此外索引值，1,2,2,3这样就不行
+
+    CREATE UNIQUE INDEX index_name
+    ON table_name (column_name)
+
+    创建带名字的索引：
+    CREATE INDEX PersonIndex
+    ON Person (LastName) 
+
+    降序索引：
+    添加DESC
+    CREATE INDEX PersonIndex
+    ON Person (LastName DESC) 
+
+    多个索引：
+    可以在括号中列出这些列的名称，用逗号隔开
+    CREATE INDEX PersonIndex
+    ON Person (LastName, FirstName)
+
+二十三、TRUNCATE TABLE：仅仅删除表中的数据
+    
+    TRUNCATE TABLE 表名称
+
+二十四、DROP：删除数据库、表、索引
+    
+    DROP DATABASE 数据库名称
+    DROP TABLE 表名称
+    ALTER TABLE table_name DROP INDEX index_name （Mysql，不同的数据库，不一样）
+
+二十五、ALTER TABLE：在已有的表中添加、修改或删除列。
+
+    添加列：
+        ALTER TABLE table_name
+        ADD column_name datatype
+    
+    删除列：
+        ALTER TABLE table_name 
+        DROP COLUMN column_name
+
+    改变列数据类型：
+        ALTER TABLE table_name
+        ALTER COLUMN column_name datatype
+
+二十六、rename table OlderTableName to NewTableName ：修改表名
+
+二十七、视图：创建、修改、删除
+    视图：基于sql语句结果集的可视化表
+    视图中可以添加sql函数、where以及join语句
+
+    创建视图：
+        CREATE VIEW view_name AS
+        SELECT column_name(s)
+        FROM table_name
+        WHERE condition
+
+    注释：视图总是显示最近的数据。每当用户查询视图时，数据库引擎通过使用 SQL 语句来重建数据。
+
+    更新视图：
+        和创建新视图的语句很像，加了OR REPLACE
+        CREATE OR REPLACE view v_person as select id from person 
+    
+二十八、临时表
+    只在当前连接可见，当关闭连接时，MySql会删除，并自动释放所有空间
+
+    CREATE TEMPORARY TABLE SalesSummary (
+    product_name VARCHAR(50) NOT NULL
+    , total_sales DECIMAL(12,2) NOT NULL DEFAULT 0.00
+    , avg_unit_price DECIMAL(7,2) NOT NULL DEFAULT 0.00
+    , total_units_sold INT UNSIGNED NOT NULL DEFAULT 0
+    );
+
+

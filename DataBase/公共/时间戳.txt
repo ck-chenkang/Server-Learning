@@ -1,0 +1,25 @@
+1、
+    Navicat中创建键的时间类型勾选根据当前时间自动更新，行中有字段修改、删除、增加会自动进行更新。
+2、
+    创建时间和更新时间：
+    DEFAULT CURRENT_TIMESTAMP
+    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+    CREATE TABLE `timestampTest` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(20) DEFAULT NULL,
+    `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `last_modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+    INSERT INTO timestampTest (name) VALUES ('aa'),('bb'),('cc');
+
+    UPDATE timestampTest SET name = 'ab' WHERE id = 1;
+
+    涉及新增或变更操作记录的，必须有 create_time字段和update_time字段 ，方便定位问题。 
+
+3、
+    
+
+

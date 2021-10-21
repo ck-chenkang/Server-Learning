@@ -1,0 +1,2 @@
+1.如果我们的表名、字段名是mysql的关键字，如table 、from 等，则必须要加上反引号``才可以使用
+如table 、from,SELECT date from from。
