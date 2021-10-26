@@ -1,0 +1,1 @@
+[awk命令](https://man.linuxde.net/awk)
