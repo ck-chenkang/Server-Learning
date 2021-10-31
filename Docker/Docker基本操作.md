@@ -72,6 +72,8 @@ $ sudo yum remove docker \
                   docker-selinux \
                   docker-engine-selinux \
                   docker-engine
+                  
+ 
 ```
 
 ## 修改国内镜像源
