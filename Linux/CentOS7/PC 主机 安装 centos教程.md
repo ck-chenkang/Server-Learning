@@ -4,6 +4,8 @@
 
 [PC安装centos](https://www.cnblogs.com/wutao666/p/10700158.html)
 
+[Centos7的安装](https://www.cnblogs.com/Hello-java/p/8628917.html)
+
 1、8G以上U盘
 
 2、UltraISO虚拟光驱（试用版即可）最新版 下载地址：https://cn.ultraiso.net/xiazai.html 点击下载试用
