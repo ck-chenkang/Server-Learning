@@ -2,6 +2,8 @@
 
 [harbor安装](https://blog.csdn.net/qq_40378034/article/details/90752212)
 
+[Docker私有仓库Harbor介绍和部署记录](https://www.cnblogs.com/kevingrace/p/6547616.html)
+
 ## 一、Harbor介绍
 
 Docker容器应用的开发和运行离不开可靠的镜像管理，虽然Docker官方也提供了公共的镜像仓库，但是从安全和效率等方面考虑，部署私有环境内的Registry也是非常必要的。Harbor是由VMware公司开源的企业级的Docker Registry管理项目，它包括权限管理(RBAC)、LDAP、日志审核、管理界面、自我注册、镜像复制和中文支持等功能
@@ -307,6 +309,32 @@ vmware/registry                2.6.1-photon        0f6c96580032        2 years a
 192.168.126.162/harbor/nginx   latest              8ddadb143133        2 years ago         199MB
 vmware/nginx                   1.11.5-patched      8ddadb143133        2 years ago         199MB
 vmware/harbor-log              v1.1.2              9c46a7b5e517        2 years ago         192MB
+
+```
+
+## 开机启动
+
+```
+vi /lib/systemd/system/harbor.service
+*************************************************
+[Unit]
+Description=Harbor
+After=docker.service systemd-networkd.service systemd-resolved.service
+Requires=docker.service
+Documentation=http://github.com/vmware/harbor
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=5
+ExecStart=/usr/local/bin/docker-compose -f  /usr/local/harbor/docker-compose.yml up
+ExecStop=/usr/local/bin/docker-compose -f /usr/local/harbor/docker-compose.yml down
+
+[Install]
+WantedBy=multi-user.target
+*****************************************************
+systemctl enable harbor
+systemctl start harbor
 
 ```
 
