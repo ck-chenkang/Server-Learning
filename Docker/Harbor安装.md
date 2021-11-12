@@ -345,3 +345,18 @@ vmware/harbor-log              v1.1.2              9c46a7b5e517        2 years a
 
 ```
 
+## Harbor的停止和启动
+
+切换到harbor安装的位置
+
+1. 停止命令
+
+```
+docker-compose stop
+```
+
+2. 启动命令
+
+```
+docker-compose up -d
+```
