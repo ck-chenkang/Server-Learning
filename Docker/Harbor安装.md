@@ -159,6 +159,8 @@ vi /lib/systemd/system/harbor.service
 
 插入如下内容
 
+ **/usr/local/harbor/docker-compose.yml up** 要修改为harbor yml目录
+
 ```
 [Unit]
 Description=Harbor
