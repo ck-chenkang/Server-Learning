@@ -41,3 +41,9 @@ git config --global user.email “你的邮箱”
 git push
 ```
 
+## 本地存取账号密码或token
+
+```
+ git config --global credential.helper store
+```
+
