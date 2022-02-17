@@ -1,75 +1,55 @@
-#  一、准备相关软件+
+# 主机安装CENTOS7
 
-参考连接：
+在dell台式机7070上安装centos7系统
 
-[PC安装centos](https://www.cnblogs.com/wutao666/p/10700158.html)
+<span style="color:red">dell新的引导模式为UEFI，下面这个软件就是制作一种这种类型的启动盘</span>
 
-[Centos7的安装](https://www.cnblogs.com/Hello-java/p/8628917.html)
+# 一、制作U盘系统盘
 
-1、8G以上U盘
+PE制作软件：
 
-2、UltraISO虚拟光驱（试用版即可）最新版 下载地址：https://cn.ultraiso.net/xiazai.html 点击下载试用
+rufus-3.1p.exe
 
-3、CentOS7镜像：http://isoredirect.centos.org/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-1810.iso
+<img src="Imag/image-20211103182239631.png" alt="image-20211103182239631" style="zoom:67%;" />
 
-# 二、制作U盘系统盘
+![image-20211103182407812](Imag/image-20211103182407812.png)
 
-#### 2.1 打开UltraISO的窗口后依次点击左上角的"文件"-"打开"
+![image-20211103182413863](Imag/image-20211103182413863.png)
 
-![img](Imag/1465656-20190413102926461-1883348426.png)
+## 开始装机
 
-#### 2.2 浏览到存放镜像文件的目录，选中该目标文件，点击"打开"按钮
+<img src="Imag/image-20211103190130024.png" alt="image-20211103190130024" style="zoom: 50%;" />
 
-![img](Imag/1465656-20190413103144048-1219059149.png)
+![IMG_20211103_183123](Imag/IMG_20211103_183123.jpg)
 
-#### 2.3 然后再次回到UltraISO窗口，点击菜单栏中的"启动"选"写入硬盘镜像"
+<span style="color:red">选择中文，英文都行，然后进入到磁盘配置</span>
 
-![img](Imag/1465656-20190413103812005-395951237.png)
+![IMG_20211103_183227](Imag/IMG_20211103_183227.jpg)
 
- 
+<span style="color:red">勾选主机的两个磁盘，选择我要配置分区</span>
 
-#### 2.4 选择写入方式选择为“USB-HDD+”，如果不是这个模式，可能导致电脑无法通过U盘正常启动
+![IMG_20211103_183238](Imag/IMG_20211103_183238.jpg)
 
-![img](Imag/1465656-20190413103938168-521446985.png)
+<span style="color:red">把这些默认的点－号全部删除</span>
 
-#### 2.5 格式化U盘并写入镜像
+![IMG_20211103_184721](Imag/IMG_20211103_184721.jpg)
 
-![img](Imag/1465656-20190413104021093-1193798664.png)
+<span style="color:red">分区选择标准分区</span>
 
-![img](Imag/1465656-20190413104042058-2085728373.png)
+这次两个磁盘一个128g固态，一个1T机械
 
-#### 2.6 请等待片刻，正在将安装系统的镜像文件数据写入到U盘里
+- /boot 200m
 
-![img](Imag/1465656-20190413104116158-529567383.png)
+- /boot/efi 200m
 
-# 三、安装CentOS7.5
+- swap 两倍的内存 16g
+- / 固态硬盘剩余大小
+- /home 机械硬盘全部大小，参考tips分配方式
 
-3.1、把U盘插到服务器
+<span style="color:red">选择右侧修改，可以选择文件系统在的磁盘</span>
 
-3.2、设置开机U盘启动 
+<span style="color:red">tips: 分配到某一个磁盘最后一个文件系统的时候，如/分区，可以先给/分区分配一个小一点的如100g，然后再修改磁盘容量为超过磁盘剩余空间大小，然后点击，更新设置，即可将磁盘剩余大小全部分配给/分区</span>
 
-3.3、选择U盘后跳转到下图界面
+![IMG_20211103_185658](Imag/IMG_20211103_185658.jpg)
 
-![img](Imag/1465656-20190413105103985-376473449.png)
-
-3.4、按下键盘TAB键将最下面的vmlinuz initrd=initrd.img inst.stage2=hd:LABEL=CentOS\x207\x20x86_64 rd.live.check quiet 改为 **vmlinuz initrd=initrd.img linux dd quiet，然后键入回车查看设备名**
-
-**![img](Imag/1465656-20190413105214758-802669535.png)**
-
-3.5、查看U盘启动盘的名称比如：sda，sdb，sdc ps：label一列会显示Centos7等字样的
-
-![img](Imag/1465656-20190413105519238-406661707.png)
-
-3.6、重启后到第三步界面按下TAB键
-
-3.7、将vmlinuz initrd=initrd.img inst.stage2=hd:LABEL=CentOS\x207\x20x86_64 rd.live.check quiet 改为 vmlinuz initrd=initrd.img inst.stage2=hd:/dev/**sda4** quiet  ps：sda4就是你看到的启动盘名称
-
- ![img](Imag/1465656-20190413105630406-1134309610.png)
-
-键入回车安装系统
-
-8、之后等待安装到图形界面
-
-![img](Imag/1465656-20190413110457095-41380248.png)
-
-具体CentOS7.5安装点击这里：https://www.cnblogs.com/wutao666/p/9479429.html
+![IMG_20211103_190836](Imag/IMG_20211103_190836.jpg)

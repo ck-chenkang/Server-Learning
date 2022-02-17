@@ -1,5 +1,7 @@
 # Harbor安装
 
+参考链接：
+
 [harbor安装](https://blog.csdn.net/qq_40378034/article/details/90752212)
 
 [Docker私有仓库Harbor介绍和部署记录](https://www.cnblogs.com/kevingrace/p/6547616.html)
@@ -148,6 +150,41 @@ registry             /entrypoint.sh serve /etc/ ...   Up      5000/tcp
 ```
 
 启动完成后，访问刚设置的hostname即可，默认是80端口，如果端口占用，可以去修改docker-compose.yml文件中，对应服务的端口映射
+
+**4）设置开机自启动**
+
+创建`harbor.service`文件
+
+```
+vi /lib/systemd/system/harbor.service
+```
+
+插入如下内容
+
+ **/usr/local/harbor/docker-compose.yml up** 要修改为harbor yml目录
+
+```
+[Unit]
+Description=Harbor
+After=docker.service systemd-networkd.service systemd-resolved.service
+Requires=docker.service
+Documentation=http://github.com/vmware/harbor
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=5
+ExecStart=/usr/local/bin/docker-compose -f  /usr/local/harbor/docker-compose.yml up
+ExecStop=/usr/local/bin/docker-compose -f /usr/local/harbor/docker-compose.yml down
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```
+systemctl enable harbor
+systemctl start harbor
+```
 
 ## 四、Harbor仓库使用
 
@@ -312,6 +349,7 @@ vmware/harbor-log              v1.1.2              9c46a7b5e517        2 years a
 
 ```
 
+<<<<<<< HEAD
 ## 开机启动
 
 ```
@@ -338,3 +376,20 @@ systemctl start harbor
 
 ```
 
+=======
+## Harbor的停止和启动
+
+切换到harbor安装的位置
+
+1. 停止命令
+
+```
+docker-compose stop
+```
+
+2. 启动命令
+
+```
+docker-compose up -d
+```
+>>>>>>> f575a6457cbb05a4823e167acabfac31083b248b
