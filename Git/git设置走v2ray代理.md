@@ -26,5 +26,9 @@ git config -l
 reset 代理设置
 git config –global –unset http.proxy
 git config –global –unset https.proxy
+
+如果上面这个不管用，需要用如下命令：
+git config --global --unset http.https://github.com.proxy
+git config --global --unset https.https://github.com.proxy
 ```
 
