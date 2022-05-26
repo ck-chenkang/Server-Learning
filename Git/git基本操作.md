@@ -65,3 +65,9 @@ git add .
 git commit -m '说明'
 ```
 
+## 推送
+
+```
+git push
+```
+
