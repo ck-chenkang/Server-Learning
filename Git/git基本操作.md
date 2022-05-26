@@ -47,7 +47,21 @@ git push
  git config --global credential.helper store
 ```
 
+## 查看仓库状态
 
+```
+git status
+```
 
+## 添加所有的修改
 
+```
+git add .
+```
+
+## 确认修改
+
+```
+git commit -m '说明'
+```
 
