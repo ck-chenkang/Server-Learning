@@ -8,7 +8,7 @@
 
 先用一张图来理一下`git fetch`和`git pull`的概念：
 
-![img](Imag/16c84ff492a9de1a~tplv-t2oaga2asx-zoom-in-crop-mark:1304:0:0:0.awebp)
+![img](Imag/16c84ff492a9de1a.awebp)
 
 可以简单的概括为：
 
@@ -157,7 +157,7 @@ $ git log -p FETCH_HEAD复制代码
 - 1
 
 如图： 
-![img](Imag/16c84ff492b700ad~tplv-t2oaga2asx-zoom-in-crop-mark:1304:0:0:0.awebp)
+![img](Imag/16c84ff492b700ad.awebp)
 
 可以看到返回的信息包括更新的文件名，更新的作者和时间，以及更新的代码（19行红色[删除]和绿色[新增]部分）。
 
