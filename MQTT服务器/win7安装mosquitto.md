@@ -20,6 +20,8 @@
 
 ## 修改配置
 
+配置文件目录在安装目录下，有个mosquitto.cnf
+
 ```shell
 # 不允许无密码访问
 allow_anonymous false
