@@ -546,7 +546,9 @@ rm /usr/local/bin/docker-compose
 
 #### Docker Compose命令说明
 
-[命令说明](https://yeasy.gitbook.io/docker_practice/compose/commands)
+[命令说明](https://yeas
+
+[y.gitbook.io/docker_practice/compose/commands)
 
 #### Compose 模板文件
 
