@@ -229,6 +229,8 @@ yum list 显示所有已经安装和可以安装的程序包
 yum list package1 显示指定程序包安装情况package1
 yum groupinfo group1 显示程序组group1信息yum search string 根据关键字string查找安装包
 
+yum install isntlled 显示已经安装了的
+
 ### 4 删除程序
 
 yum remove &#124; erase package1 删除程序包package1
