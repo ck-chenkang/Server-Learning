@@ -14,14 +14,12 @@
 
 ```shell
 docker pull zookeeper:3.7
-1
 ```
 
 2.启动
 
 ```shell
 docker run -d --name zookeeper -p 2181:2181 -e TZ="Asia/Shanghai" -v /opt/zookeeper/data:/data --restart always zookeeper:3.7
-1
 ```
 
 ## **安装 Kafka** 
@@ -30,14 +28,12 @@ docker run -d --name zookeeper -p 2181:2181 -e TZ="Asia/Shanghai" -v /opt/zookee
 
 ```shell
 docker pull wurstmeister/kafka
-1
 ```
 
 2.启动
 
 ```shell
 docker run -d --name kafka -p 9092:9092 -e KAFKA_BROKER_ID=0 -e KAFKA_ZOOKEEPER_CONNECT=Zookeeper-IP:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://IP:9092 -e KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092 -e TZ="Asia/Shanghai" wurstmeister/kafka
-1
 ```
 
 ### 启动环境变量参数说明
@@ -56,14 +52,12 @@ docker run -d --name kafka -p 9092:9092 -e KAFKA_BROKER_ID=0 -e KAFKA_ZOOKEEPER_
 
 ```shell
 docker pull sheepkiller/kafka-manager
-1
 ```
 
 2.启动
 
 ```shell
 docker run -d --name kfk-manager --restart always -p 9000:9000 -e ZK_HOSTS=<这里换成你的zookeeper地址和端口> sheepkiller/kafka-manager
-1
 ```
 
 ## **Docker-Compose 安装 Kafka** 
@@ -72,7 +66,6 @@ docker run -d --name kfk-manager --restart always -p 9000:9000 -e ZK_HOSTS=<这�
 
 ```shell
 mkdir kafka
-1
 ```
 
 ### 新建 docker-compose.yml
@@ -109,14 +102,12 @@ services:
         ZK_HOSTS: 127.0.0.1                         ## 修改:宿主机IP
     ports:  
       - "9009:9000"                                 ## 暴露端口 9000这个端口冲突太多
-12345678910111213141516171819202122232425262728293031
 ```
 
 > 启动
 
 ```shell
 docker-compose up -d --build
-1
 ```
 
 ## **测试** 
@@ -125,7 +116,6 @@ docker-compose up -d --build
 
 ```shell
 docker exec -it kafka /bin/bash
-1
 ```
 
 ### 2.创建一个名称为 mingyue 的 topic
@@ -134,21 +124,18 @@ docker exec -it kafka /bin/bash
 kafka-topics.sh --create --topic mingyue \
 --zookeeper zookeeper:2181 --replication-factor 1 \
 --partitions 1
-123
 ```
 
 > 输出日志：
 
 ```
 Created topic mingyue.
-1
 ```
 
 ### 3.查看刚刚创建的 topic 信息
 
 ```shell
 kafka-topics.sh --zookeeper zookeeper:2181 --describe --topic mingyue
-1
 ```
 
 ### 输出日志：
@@ -156,7 +143,6 @@ kafka-topics.sh --zookeeper zookeeper:2181 --describe --topic mingyue
 ```shell
 Topic: mingyue	TopicId: jn6EBXBFStqH4s1zTERmnQ	PartitionCount: 1	ReplicationFactor: 1	Configs: 
 Topic: mingyue	Partition: 0	Leader: 1001	Replicas: 1001	Isr: 1001
-12
 ```
 
 ### 4.打开生产者发送消息
@@ -164,7 +150,6 @@ Topic: mingyue	Partition: 0	Leader: 1001	Replicas: 1001	Isr: 1001
 ```shell
 kafka-console-producer.sh --topic=mingyue \
 --broker-list kafka:9092
-12
 ```
 
 ### 5.消费者接收消息
@@ -173,7 +158,6 @@ kafka-console-producer.sh --topic=mingyue \
 kafka-console-consumer.sh \
 --bootstrap-server kafka:9092 \
 --from-beginning --topic mingyue
-123
 ```
 
 > 输入日志：
