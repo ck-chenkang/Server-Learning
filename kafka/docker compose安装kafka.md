@@ -78,6 +78,7 @@ services:
     container_name: zookeeper
     ports:
       - "2181:2181"                 ## 对外暴露的端口号
+    restart: always ## 设置开机自启动
   kafka:
     image: wurstmeister/kafka       ## 镜像
     container_name: kafka
@@ -95,6 +96,7 @@ services:
       KAFKA_GROUP_MAX_SESSION_TIMEOUT_MS: 60000
       KAFKA_NUM_PARTITIONS: 3
       KAFKA_DELETE_RETENTION_MS: 1000
+    restart: always ## 设置开机自启动
   kafka-manager:
     image: sheepkiller/kafka-manager                ## 镜像：开源的web管理kafka集群的界面
     container_name: kafka-manager
@@ -102,6 +104,7 @@ services:
         ZK_HOSTS: 127.0.0.1                         ## 修改:宿主机IP
     ports:  
       - "9009:9000"                                 ## 暴露端口 9000这个端口冲突太多
+    restart: always ## 设置开机自启动
 ```
 
 > 启动

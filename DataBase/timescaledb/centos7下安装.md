@@ -10,6 +10,8 @@ pg version 12.11
 
 [参考链接3](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-timescaledb-on-centos-7)
 
+[如何升级timescaledb](https://chowdera.com/2022/188/202207070123376918.html)
+
 先安装postgres，这里没什么
 
 ### 开始安装timescaledb
@@ -26,8 +28,25 @@ postgres版本查看方法：psql --version
 cd ~
 mkdir download
 cd download
-# 下载timescaledb_14-2.5.0-1.rhel7.x86_64.rpm源
- wget --no-check-certificate  https://download.postgresql.org/pub/repos/yum/12/redhat/rhel-7.5-x86_64/timescaledb_12-1.7.0-1.rhel7.x86_64.rpm
+
+# 下载
+wget --no-check-certificate  https://download.postgresql.org/pub/repos/yum/12/redhat/rhel-7.5-x86_64/timescaledb_12-1.7.0-1.rhel7.x86_64.rpm
+
+# 这一步我也不知道有没有用，反正做了，不出错
+cat > /etc/yum.repos.d/timescale_timescaledb.repo <<EOL      # 方式三
+[timescale_timescaledb]
+name=timescale_timescaledb
+baseurl=https://packagecloud.io/timescale/timescaledb/el/7/\$basearch
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=https://packagecloud.io/timescale/timescaledb/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300
+# 这一步一定要做
+yum update -y
+
 # 安装
 yum install timescaledb_12-1.7.0-1.rhel7.x86_64.rpm -y
 ```
