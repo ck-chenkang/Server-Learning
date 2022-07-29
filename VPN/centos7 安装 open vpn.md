@@ -296,3 +296,56 @@ docker ps
 docker restart 容器id
 ```
 
+## 配置分流
+
+[参考链接](https://blog.csdn.net/zzchances/article/details/124801161)
+
+**我们因为某些原因需要特定的流量不进VPN隧道或者进VPN隧道转发，我们就可以通过定义路由实现。**
+
+路由控制需要由三个参数进行定义：
+
+1、route-nopull
+
+如果在客户端配置文件中配route-nopull，openvpn连接后将不会在电脑上添加任何路由，所有流量都将本地转发。
+
+2、vpn_gateway
+
+如果在客户端配置文件中配vpn_getaway，默认访问网络不走vpn隧道，如果可以通过添加该参数，下发路由，访问目的网络匹配到会自动进入VPN隧道。
+
+```
+route 10.0.0.0 255.255.255.0  vpn_gateway
+route 172.16.0.0 255.255.255.0  vpn_gateway
+```
+
+3、net_gateway
+
+这个参数和 vpn_gateway 相反,表示在默认出去的访问全部走 openvpn 时,强行指定部分IP地址段访问不通过 Openvpn 出去。
+**max-routes** 参数表示可以添加路由的条数,默认只允许添加100条路由,如果少于100条路由可不加这个参数。
+
+```
+max-routes 1000
+route 10.100.0.0 255.255.255.0 net_gateway
+```
+
+4、redirect-gateway def1
+
+这个要删除
+
+**配置如下：**
+
+```
+
+client
+nobind
+dev tun
+remote-cert-tls server
+
+remote 1.117.60.61 1194 udp
+
+
+route-nopull
+route 192.168.255.0 255.255.255.0  vpn_gateway
+route 192.168.254.0 255.255.255.0  vpn_gateway
+```
+
+<span style="background-color:yellow">修改完配置文件后，然后再导进去</span>
