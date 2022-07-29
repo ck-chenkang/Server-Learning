@@ -107,6 +107,7 @@ CRL file: /etc/openvpn/pki/crl.pem
 
 ```shell
 # CLIENTNAME为客户端名，可以替换成自己的用户名
+# 
 docker run -v $OVPN_DATA:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full CLIENTNAME nopass
 ```
 
@@ -274,3 +275,24 @@ COMMIT
 OVPN_DATA="ovpn-data-example"
 docker run -v $OVPN_DATA:/etc/openvpn -d -p 1194:1194/udp --cap-add=NET_ADMIN kylemanna/openvpn
 ```
+
+## 生成客户的方法
+
+```bash
+# 进入容器
+docker exec -it bash
+# 执行
+# 创建客户
+easyrsa build-client-full CLIENTNAME nopass
+# 导出连接的配置文件
+ovpn_getclient CLIENTNAME > CLIENTNAME.ovpn
+```
+
+## 容器重启方法
+
+```bash
+# 查看容器id
+docker ps 
+docker restart 容器id
+```
+
