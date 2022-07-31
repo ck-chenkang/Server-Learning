@@ -6,12 +6,14 @@
 
 [thingsboard编译闭坑指南](https://www.codeleading.com/article/47066285401/)
 
+[Thingsboard源码编译](https://blog.csdn.net/Ls101624/article/details/107153925?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165927075616781432969290%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=165927075616781432969290&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~pc_rank_v35-18-107153925-null-null.142^v35^experiment_28w_v1&utm_term=thingsboard%20pkg.name&spm=1018.2226.3001.4187)
+
 ## 准备
 
 首先需要安装下面的这些
 
 1. JDK
-2. Maven
+2. Maven：<span style="color:red">推荐使用3.6.2版本，不要用3.8.几的</span>
 3. nvm
 4. node：版本对应上thingsboard/ui-ngx/pom.xml下的版本
 5. yarn：版本对应上thingsboard/ui-ngx/pom.xml下的版本
