@@ -327,9 +327,9 @@ max-routes 1000
 route 10.100.0.0 255.255.255.0 net_gateway
 ```
 
-4、redirect-gateway def1
+4、删除redirect-gateway def1
 
-这个要删除
+把下面三行，放进去。
 
 **配置如下：**
 
