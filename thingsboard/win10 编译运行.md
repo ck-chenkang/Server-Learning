@@ -194,6 +194,15 @@ mvn clean package -DskipTests
 
 ## IDEA导入
 
+导入前请确保安装下面两个插件：
+
+```
+Lombok
+Protocol Buffer Editor
+```
+
+![image-20220802092705352](E:\codes\Server-Learning\thingsboard\Imag\image-20220802092705352.png)
+
 使用IDEA导入Thingsboard项目，并在导入到项目后，使用菜单将Maven依赖重新引入。
 
 ![在这里插入图片描述](Imag/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FnYmloYw==,size_16,color_FFFFFF,t_70.png)
