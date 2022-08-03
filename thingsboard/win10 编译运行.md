@@ -201,7 +201,7 @@ Lombok
 Protocol Buffer Editor
 ```
 
-![image-20220802092705352](E:\codes\Server-Learning\thingsboard\Imag\image-20220802092705352.png)
+![image-20220802092705352](\Imag\image-20220802092705352.png)
 
 使用IDEA导入Thingsboard项目，并在导入到项目后，使用菜单将Maven依赖重新引入。
 
