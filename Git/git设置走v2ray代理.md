@@ -1,6 +1,6 @@
 ## 设置github sockets代理
 
-v2ray是socks
+v2ray是socks，clashx是混合模式，默认端口是7890
 
 ```
 git config --global http.https://github.com.proxy socks5://127.0.0.1:1080
