@@ -4,7 +4,7 @@ v2ray是socks，clashx是混合模式，默认端口是7890
 
 ```
 git config --global http.https://github.com.proxy socks5://127.0.0.1:1080
-git config –-global https.https://github.com.proxy socks5://127.0.0.1:1080
+git config --global https.https://github.com.proxy socks5://127.0.0.1:1080
 ```
 
 ![image-20211023092421889](Imag/image-20211023092421889.png)
@@ -14,8 +14,8 @@ git config –-global https.https://github.com.proxy socks5://127.0.0.1:1080
 ssr小飞机是http
 
 ```
-git config –global http.https://github.com.proxy https://127.0.0.1:1081
-git config –global https.https://github.com.proxy https://127.0.0.1:1081
+git config --global http.https://github.com.proxy https://127.0.0.1:1081
+git config --global https.https://github.com.proxy https://127.0.0.1:1081
 ```
 
 ## 查看、重置代理
