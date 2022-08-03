@@ -280,12 +280,15 @@ docker run -v $OVPN_DATA:/etc/openvpn -d -p 1194:1194/udp --cap-add=NET_ADMIN ky
 
 ```bash
 # 进入容器
-docker exec -it bash
+docker exec  -it 容器ID bash
 # 执行
-# 创建客户
+# 创建客户,这里需要输入之前的密码，我设置的是ck123456
 easyrsa build-client-full CLIENTNAME nopass
-# 导出连接的配置文件
+# 导出连接的配置文件 
 ovpn_getclient CLIENTNAME > CLIENTNAME.ovpn
+# 导出的配置文件现在在容器的~目录下
+# mv CLIENTNAME.ovpn 挂载卷
+mv CLIENTNAME.ovpn /etc/openvpn
 ```
 
 ## 容器重启方法
