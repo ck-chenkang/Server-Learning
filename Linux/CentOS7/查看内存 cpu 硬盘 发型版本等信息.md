@@ -79,8 +79,6 @@ CentOS Linux release 7.4.1708 (Core)
 
 查看 CPU 物理个数 
 
-
-
 ```
 [root@node5 ~]# grep 'physical id' /proc/cpuinfo | sort -u | wc -l  
 1 
@@ -88,8 +86,6 @@ CentOS Linux release 7.4.1708 (Core)
 ```
 
 查看 CPU 核心数量 
-
-
 
 ```
 [root@node5 ~]# grep 'core id' /proc/cpuinfo | sort -u | wc -l  
@@ -101,8 +97,6 @@ CentOS Linux release 7.4.1708 (Core)
 
 \#逻辑cpu数：一般情况下，逻辑cpu=物理CPU个数×每颗核数，如果不相等的话，则表示服务器的CPU支持超线程技术（HT：简单来说，它可使处理#器中的1 颗内核如2 颗内核那样在操作系统中发挥作用。这样一来，操作系统可使用的执行资源扩大了一倍，大幅提高了系统的整体性能，此时逻#辑cpu=物理CPU个数×每颗核数x2） 
 
-
-
 ```
 [root@node5 ~]# cat /proc/cpuinfo| grep "processor"|wc -l  
 4  
@@ -113,8 +107,6 @@ CentOS Linux release 7.4.1708 (Core)
 
 查看 CPU 型号 
 
-
-
 ```
 [root@node5 ~]# cat /proc/cpuinfo | grep name | sort | uniq  
 model name  : Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz  
@@ -124,8 +116,6 @@ Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
 ```
 
 查看 CPU 的详细信息 
-
-
 
 ```
 #CPU有几个核，就会输出几个重复的信息  
@@ -159,8 +149,6 @@ power management:
 ```
 
 查看CPU的详细信息 
-
-
 
 ```
 [root@node5 ~]# lscpu  
@@ -213,8 +201,6 @@ Flags:                 fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca 
 
 查询服务器内存 
 
-
-
 ```
 [root@node5 ~]# free -m  
               total        used        free      shared  buff/cache   available  
@@ -232,8 +218,6 @@ Swap:          2047           0        2047
 
 每隔3秒查询一下内存 
 
-
-
 ```
 [root@node5 ~]# free -s 3  
               total        used        free      shared  buff/cache   available  
@@ -250,8 +234,6 @@ Swap:       2097148           0     2097148
 ## **硬盘基本配置查询**
 
 查询磁盘整体使用情况 
-
-
 
 ```
 [root@node5 ~]# df -h  
@@ -272,8 +254,6 @@ tmpfs                    395M     0  395M   0% /run/user/0
 ```
 
 查询某个目录磁盘占用情况 
-
-
 
 ```
 #命令拓展  
@@ -316,8 +296,6 @@ tmpfs                    395M     0  395M   0% /run/user/0
 
 查看目录结构 
 
-
-
 ```
 #tree命令默认没有安装，需要手动安装一下  
 [root@node5 ~]# yum -y install tree  
@@ -340,8 +318,6 @@ tmpfs                    395M     0  395M   0% /run/user/0
 ```
 
 以树状的格式显示所有可用的块设备信息 
-
-
 
 ```
 [root@node5 ~]# lsblk  
@@ -366,8 +342,6 @@ sr0              11:0    1 1024M  0 rom
 ```
 
 列出所有可用的设备、通用唯一识别码（UUID）、文件系统类型以及卷标 
-
-
 
 ```
 [root@node5 ~]# blkid  
