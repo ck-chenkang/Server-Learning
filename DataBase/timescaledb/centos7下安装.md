@@ -22,7 +22,7 @@ pg version 12.11
 
 postgres版本查看方法：psql --version
 
-![image-20220720153341078](E:\codes\Server-Learning\DataBase\timescaledb\Imag\image-20220720153341078.png)
+![image-20220720153341078](\Imag\image-20220720153341078.png)
 
 ```
 cd ~
@@ -44,6 +44,7 @@ gpgkey=https://packagecloud.io/timescale/timescaledb/gpgkey
 sslverify=1
 sslcacert=/etc/pki/tls/certs/ca-bundle.crt
 metadata_expire=300
+EOF
 # 这一步一定要做
 yum update -y
 
@@ -60,7 +61,7 @@ vi /var/lib/pgsql/12/data/postgresql.conf
 在末尾添加:
 
 ```
- shared_preload_libraries = ‘timescaledb’
+shared_preload_libraries = 'timescaledb'
 ```
 
 重启
@@ -84,4 +85,4 @@ timeseries=# create extension timescaledb;                            # 方式�
 timeseries=# CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;      # 方式二，使用 TimescaleDB 扩展数据库
 ```
 
-![image-20220720153856426](E:\codes\Server-Learning\DataBase\timescaledb\Imag\image-20220720153856426.png)
+![image-20220720153856426](\Imag\image-20220720153856426.png)

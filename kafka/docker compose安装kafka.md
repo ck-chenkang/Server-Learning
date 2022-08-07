@@ -70,6 +70,8 @@ mkdir kafka
 
 ### 新建 docker-compose.yml
 
+<font style="background-color: yellow">一定要修改下面的ip</font>
+
 ```yaml
 version: '3.5'
 services:
