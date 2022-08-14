@@ -24,8 +24,8 @@ git config --global https.https://github.com.proxy https://127.0.0.1:1081
 查看所有配置
 git config -l
 reset 代理设置
-git config –global –unset http.proxy
-git config –global –unset https.proxy
+git config –-global –-unset http.proxy
+git config –-global –-unset https.proxy
 
 如果上面这个不管用，需要用如下命令：
 git config --global --unset http.https://github.com.proxy
