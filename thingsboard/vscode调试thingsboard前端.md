@@ -10,6 +10,22 @@
 
 ![image-20220826095851218](Imag/image-20220826095851218.png)
 
+```json
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+  {
+    "name": "Launch Chrome",
+    "request": "launch",
+    "type": "chrome",
+    "url": "http://localhost:4200",
+    "webRoot": "${workspaceFolder}"
+  }
+  ]
+}
+```
+
 启动thingsboard
 
 ![image-20220826095945164](Imag/image-20220826095945164.png)
