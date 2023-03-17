@@ -213,3 +213,23 @@ Protocol Buffer Editor
 注意：修改ui-ngx代码后需要执行一下编译（在ui-gnx目录下执行mvn clean install -DskipTests），直接启动才能体现。
 
 <span style="background-color:yellow">中文语言包：</span>下载的版本中，中文语言包不全，导致很多地方不能正确显示。对比ui-ngx\src\assets\locale\locale.constant-en_US.json修改ui-ngx\src\assets\locale\locale.constant-zh_CN.json即可。
+
+## 数据库初始化
+
+[ThingsBoard数据库初始化](https://www.jianshu.com/p/dc58b784ff01)
+
+#### 项目编译通过后，运行报错是因为数据库中没有数据，需要初始化数据库。
+
+###### 1. 配置application/src/main/resources/thingsboard.yml
+
+配置自己postgres数据库的信息
+
+![img](E:\codes\Server-Learning\thingsboard\Imag\6926181-2898dd3aef788760.png)
+
+###### 2.初始化数据库需要将dao/src/main/resources/sql 文件夹，整个复制到application/src/main/data下，然后执行application/src/main/java/org/thingsboard/server/ThingsboardInstallApplication.java 即可完成数据库的初始化：
+
+![img](E:\codes\Server-Learning\thingsboard\Imag\6926181-be5b126a3a2a6ff8.png)
+
+查看数据库：
+
+![img](E:\codes\Server-Learning\thingsboard\Imag\6926181-2490a7274757c169.png)
