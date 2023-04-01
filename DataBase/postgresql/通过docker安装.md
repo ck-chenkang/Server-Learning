@@ -23,7 +23,7 @@
 6.[启动docker](https://so.csdn.net/so/search?q=%E5%90%AF%E5%8A%A8docker&spm=1001.2101.3001.7020) 镜像 
 
 ```
-docker run --name postgres     --restart=always     -e POSTGRES\_PASSWORD=password      -p 5432:5432 -v /data/postgresql:/var/lib/postgresql/data   -d postgres:14.2  
+docker run --name postgres     --restart=always     -e POSTGRES_PASSWORD=password      -p 5432:5432 -v /data/postgresql:/var/lib/postgresql/data   -d postgres:14.2  
 ```
 
 ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\d7477751a2f54d3eacebb0e452796f19.png)  
