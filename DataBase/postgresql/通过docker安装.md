@@ -1,3 +1,39 @@
 # docker安装postgresql
 
-1.查询[postgresql](https://so.csdn.net/so/search?q=postgresql&spm=1001.2101.3001.7020)镜像 docker search postgres NAME         --镜像名称 DESCRIPTION  --镜像描述 STARS         --标星数 OFFICIAL       --官方的 AUTOMATED   -- 自动化 ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\5bb7142b44ee438da4b229fae85e3d81.png)     **圈红的地方为postgres官方镜像文件！** 2.拉去镜像文件 docker pull postgres:14.2 ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\0249821d70404c529019ce6aa5c4d479.png) 我这里拉去的是**官方14.2版本**的镜像文件，也可以拉去最新的版本，按需拉取镜像文件，**新手最好拉取官方镜像（ps网上的文档较多，出现问题可以招到解决办法）** 3.镜像文件是否成功拉取 docker images ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\350dcd5d44184b48831f861618511a20.png)  4.创建挂载文件夹 cd /         cd data mkdir postgresql  ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\e1b804a660564e6c98bb8f46a980fc8e.png) 在data目录创建挂载文件夹（我这是在正式服务器，所有镜像的挂载目录都在data目录，方便后期维护）  6.[启动docker](https://so.csdn.net/so/search?q=%E5%90%AF%E5%8A%A8docker&spm=1001.2101.3001.7020) 镜像 docker run --name postgres \\     --restart=always \\     -e POSTGRES\_PASSWORD=password \\     -p 5432:5432 \\     -v /data/postgresql:/var/lib/postgresql/data \\     -d postgres:14.2  ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\d7477751a2f54d3eacebb0e452796f19.png)  run: 创建并运行一个容器；  --restart=always 表示容器退出时,docker会总是自动重启这个容器；   –name: 指定创建的容器的名字；   \-e POSTGRES\_PASSWORD=password: 设置环境变量，指定数据库的登录口令为password；   \-p 5432:5432: [端口映射](https://so.csdn.net/so/search?q=%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84&spm=1001.2101.3001.7020)将容器的5432端口映射到外部机器的5432端口； \-v /data/postgresql:/var/lib/postgresql/data  将运行镜像的/var/lib/postgresql/data目录挂载到宿主机/data/postgresql目录   \-d postgres:11.4: 指定使用postgres:11.4作为镜像。 7.查看启动日志 docker logs postgres ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\a381e5d17c0842bc979c112381641c05.png) 8.查看运行的容器，看看镜像是否启动成功 docker ps  ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\36109d62d886478aaf4e01d928f7d0e5.png)  9.本地连接测试数据库是否连接成功 ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\de07fc8b348749b6ad9859ef10cfc4ba.png) 安装成功（ps:输入命令时候端口映射出现了问题，后面通过直接更改配置文件，更改了端口映射关系） 10.数据库连接失败可能的原因：     1.容器启动失败，端口冲突     解决方案：更改容器映射端口     2.服务器端口没有开放     解决方案： 在服务器安全组，配置出入站规则     还有其他原因，暂时没有遇到 以上就是使用docker安装postgresql的全过程，如有问题，请及时与人联系，欢迎大家指正！（ps：后续有  nignx，Redis，fastdfs，nexus，portainter，kuboard，kibana，gitlab，rabbitmq 会慢慢的写出来，有兴趣的，评论区交流，互相提高技术） ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\921a925016be42198669cccc90aab2d3.png)
+1.查询[postgresql](https://so.csdn.net/so/search?q=postgresql&spm=1001.2101.3001.7020)镜像 docker search postgres NAME         --镜像名称 DESCRIPTION  --镜像描述 STARS         --标星数 OFFICIAL       --官方的 AUTOMATED   -- 自动化
+
+ ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\5bb7142b44ee438da4b229fae85e3d81.png)    
+
+ **圈红的地方为postgres官方镜像文件！**
+
+ 2.拉去镜像文件 docker pull postgres:14.2
+
+ ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\0249821d70404c529019ce6aa5c4d479.png) 
+
+我这里拉去的是**官方14.2版本**的镜像文件，也可以拉去最新的版本，按需拉取镜像文件，**新手最好拉取官方镜像（ps网上的文档较多，出现问题可以招到解决办法）**
+
+ 3.镜像文件是否成功拉取 docker images
+
+ ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\350dcd5d44184b48831f861618511a20.png)  
+
+4.创建挂载文件夹 cd /         cd data mkdir postgresql  ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\e1b804a660564e6c98bb8f46a980fc8e.png)
+
+ 在data目录创建挂载文件夹（我这是在正式服务器，所有镜像的挂载目录都在data目录，方便后期维护）  
+
+6.[启动docker](https://so.csdn.net/so/search?q=%E5%90%AF%E5%8A%A8docker&spm=1001.2101.3001.7020) 镜像 
+
+```
+docker run --name postgres     --restart=always     -e POSTGRES_PASSWORD=password      -p 5432:5432 -v /data/postgresql:/var/lib/postgresql/data   -d postgres:14.2  
+```
+
+![](E:\codes\Server-Learning\DataBase\postgresql\Imag\d7477751a2f54d3eacebb0e452796f19.png)  
+
+run: 创建并运行一个容器；  --restart=always 表示容器退出时,docker会总是自动重启这个容器；   –name: 指定创建的容器的名字；   \-e POSTGRES\_PASSWORD=password: 设置环境变量，指定数据库的登录口令为password；   \-p 5432:5432: [端口映射](https://so.csdn.net/so/search?q=%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84&spm=1001.2101.3001.7020)将容器的5432端口映射到外部机器的5432端口； \-v /data/postgresql:/var/lib/postgresql/data  将运行镜像的/var/lib/postgresql/data目录挂载到宿主机/data/postgresql目录   \-d postgres:11.4: 指定使用postgres:11.4作为镜像。 
+
+7.查看启动日志 docker logs postgres ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\a381e5d17c0842bc979c112381641c05.png) 8.查看运行的容器，看看镜像是否启动成功 docker ps  ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\36109d62d886478aaf4e01d928f7d0e5.png)  
+
+9.本地连接测试数据库是否连接成功
+
+ ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\de07fc8b348749b6ad9859ef10cfc4ba.png) 
+
+安装成功（ps:输入命令时候端口映射出现了问题，后面通过直接更改配置文件，更改了端口映射关系） 10.数据库连接失败可能的原因：     1.容器启动失败，端口冲突     解决方案：更改容器映射端口     2.服务器端口没有开放     解决方案： 在服务器安全组，配置出入站规则     还有其他原因，暂时没有遇到 以上就是使用docker安装postgresql的全过程，如有问题，请及时与人联系，欢迎大家指正！（ps：后续有  nignx，Redis，fastdfs，nexus，portainter，kuboard，kibana，gitlab，rabbitmq 会慢慢的写出来，有兴趣的，评论区交流，互相提高技术） ![](E:\codes\Server-Learning\DataBase\postgresql\Imag\921a925016be42198669cccc90aab2d3.png)
