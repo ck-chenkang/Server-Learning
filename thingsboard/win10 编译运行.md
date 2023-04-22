@@ -121,6 +121,20 @@ git config --global url."https://".insteadOf git://
     </mirror>
 ```
 
+## 编译
+
+```
+# 下载
+git clone thingsboard仓库地址
+# reset remote
+git remote set-url origin https://github.com/thingsboard/thingsboard.git
+# 查看分支
+git brach -a
+# 切换到需要编译的版本 前面的是自己定义的名字 后面的是远程仓库的名字
+git checkout -b release-3.2 origin/release-3.2
+
+```
+
 ### npm，yarn换源
 
 ```
@@ -146,20 +160,6 @@ pkg-cache下创建v2.6文件夹，下载uploaded-v2.6-node-v12.18.1-win-x64和up
 ```
 cd 到那个目录
 yarn install
-```
-
-## 编译
-
-```
-# 下载
-git clone thingsboard仓库地址
-# reset remote
-git remote set-url origin https://github.com/thingsboard/thingsboard.git
-# 查看分支
-git brach -a
-# 切换到需要编译的版本 前面的是自己定义的名字 后面的是远程仓库的名字
-git checkout -b release-3.2 origin/release-3.2
-
 ```
 
 ### **注释license-maven-plugin**

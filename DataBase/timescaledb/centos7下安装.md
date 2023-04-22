@@ -22,7 +22,7 @@ pg version 12.11
 
 postgres版本查看方法：psql --version
 
-![image-20220720153341078](\Imag\image-20220720153341078.png)
+![image-20220720153341078](Imag\image-20220720153341078.png)
 
 ```
 cd ~
@@ -85,4 +85,4 @@ timeseries=# create extension timescaledb;                            # 方式�
 timeseries=# CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;      # 方式二，使用 TimescaleDB 扩展数据库
 ```
 
-![image-20220720153856426](\Imag\image-20220720153856426.png)
+![image-20220720153856426](Imag\image-20220720153856426.png)
