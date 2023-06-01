@@ -46,7 +46,7 @@ Remove a whole tree, with the exception of a single topic:
 mosquitto_sub -t 'bbc/#' -T bbc/bbc1 --remove-retained
 ```
 
-实际采用如下：
+<span style="background-color:yellow">实际采用如下：</span>
 
 ```
 mosquitto_sub.exe -h 服务器IP -t data/device_id -u admin -P kufu123@ --remove-retained
