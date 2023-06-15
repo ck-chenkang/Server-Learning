@@ -11,7 +11,7 @@
 docker pull emqx/emqx:5.0.26
 
 #运行
-docker run --restart=always -d --name emqx -p 1883:1883 -p 8083:8083 -p 8084:8084 -p 8883:8883 -p 18083:18083 emqx/emqx:5.0.26
+docker run --restart=always -d --name emqx -p 1884:1883 -p 8083:8083 -p 8084:8084 -p 8883:8883 -p 18083:18083 emqx/emqx:5.0.26
 ```
 
 ## 2.登录
